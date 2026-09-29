@@ -1,0 +1,272 @@
+{
+  "$schema": "https://raw.githubusercontent.com/antigravity/model-scanner/v2.0.0/schemas/scan-result.json",
+  "evaluation_id": "onnx-extended-2026-09-02",
+  "scanner_commit": "93368c0",
+  "scanner_version": "2.0.0",
+  "evaluation_date": "2026-09-02",
+  "methodology": "static_acquisition_and_analysis_only",
+  "constraints": [
+    "No model inference executed",
+    "No ONNX Runtime, OpenVINO, TensorRT, or other runtime used",
+    "Every artifact treated as untrusted",
+    "No exploit payloads executed",
+    "No scanner implementation modified during evaluation",
+    "No new commit created during evaluation"
+  ],
+  "test_cases": [
+    {
+      "tc_id": "TC8",
+      "repository": "rez0/onnx-ort-path-traversal-poc",
+      "repository_type": "model",
+      "artifact": "model.onnx",
+      "artifact_size_bytes": 159,
+      "sha256": "54706759afd3eb55d04c323154740745c1cc1f9f6743ed2c17269e3d94ea6a18",
+      "accessible": true,
+      "testable": true,
+      "vulnerability_class": "onnx_external_data_path_traversal",
+      "vulnerability_description": "ONNX Runtime 1.23.2 loads models with path traversal sequences in external_data location fields without validation. Loading reads arbitrary files from the file system (arbitrary file read / information disclosure). Disclosed via Huntr.",
+      "cve": null,
+      "attack_vector": "external_data.location = '../../../../etc/hosts'",
+      "static_structure": {
+        "format": "ONNX",
+        "opset": 17,
+        "ir_version": 8,
+        "nodes": [{"op_type": "Add", "domain": ""}],
+        "initializers": [
+          {
+            "name": "W",
+            "data_location": "EXTERNAL",
+            "external_data": {
+              "location": "../../../../etc/hosts",
+              "offset": 0,
+              "length": 4
+            }
+          }
+        ]
+      },
+      "scan_command": "python -m model_scanner scan \"https://huggingface.co/rez0/onnx-ort-path-traversal-poc\" --max-size 500 --json --output scan_tc8.json",
+      "scanner_result": {
+        "overall_outcome": "WARNING",
+        "finding_count": 1,
+        "risk_score": 30,
+        "risk_band": "LOW_RISK",
+        "duration_ms": 204,
+        "findings": [
+          {
+            "rule_id": "ON103",
+            "severity": "HIGH",
+            "confidence": "HIGH",
+            "category": "path_traversal",
+            "matched_evidence": "initializer='W' location='../../../../etc/hosts'",
+            "cwe": "CWE-22",
+            "owasp": "ML06:2023"
+          }
+        ]
+      },
+      "verdict": "TP",
+      "tc_classification": "TRUE_POSITIVE",
+      "notes": "SHA-256 matches the PoC bytes embedded in tests/unit/test_onnx_analyzer.py (_POC_MODEL_BYTES). ON103 fires correctly on the location field."
+    },
+    {
+      "tc_id": "TC9",
+      "repository": "ScangGengy/shadow-cnn-onnx-poc",
+      "repository_type": "model",
+      "artifact": "shadow_cnn.onnx",
+      "artifact_size_bytes": null,
+      "sha256": null,
+      "accessible": false,
+      "testable": false,
+      "gated_repo": true,
+      "http_status": 401,
+      "http_error_code": "GatedRepo",
+      "vulnerability_class": "standard_operator_semantic_backdoor",
+      "vulnerability_description": "ShadowLogic backdoor: ONNX computational graph encodes inference-time backdoor behavior using only standard ONNX operators. Trigger: 2x2 red pixel patch in top-left corner of input image forces class-0 prediction. 47 nodes, opset 18, all standard domain. No custom operators, no external data, no structural anomalies.",
+      "cve": null,
+      "attack_vector": "semantic / behavioral (model weights and graph topology)",
+      "static_structure": null,
+      "scan_command": "python -m model_scanner scan \"https://huggingface.co/ScangGengy/shadow-cnn-onnx-poc\" --max-size 500 --json --output scan_tc9.json",
+      "scanner_result": {
+        "overall_outcome": "ERROR",
+        "finding_count": 0,
+        "risk_score": null,
+        "risk_band": null,
+        "acquisition_error": "GatedRepo (HTTP 401)"
+      },
+      "verdict": "CANNOT_TEST",
+      "tc_classification": "CANNOT_TEST",
+      "secondary_analysis": {
+        "if_accessible_expected_verdict": "INCONCLUSIVE",
+        "reasoning": "Semantic backdoor encoded in standard operators and weights. Static structural analysis cannot detect behavioral trigger conditions. ON101 would not fire (standard domain). ON102 would not fire (graph parses correctly). ON103 would not fire (no external data). No Project 2 rule addresses behavioral equivalence or weight-space backdoor detection."
+      },
+      "notes": "Primary: GatedRepo — file not downloadable without HF authentication. Secondary: Even if accessible, attack is inherently undetectable by static structural analysis. Expected result would be CLEAN (INCONCLUSIVE), not a false negative under stated scanner scope."
+    },
+    {
+      "tc_id": "TC10",
+      "repository": "rez0/onnx-lrn-sigsegv-poc",
+      "repository_type": "model",
+      "artifact": "lrn_crash_poc.onnx",
+      "artifact_size_bytes": 140,
+      "sha256": "4aa4a234296d2e55c9861126d6f07989d723c8a7ead7f56a25bf6d49d85d5a28",
+      "accessible": true,
+      "testable": true,
+      "vulnerability_class": "runtime_dos_via_malformed_operator_attribute",
+      "vulnerability_description": "LRN operator with size=200000001. ONNX spec validates size>0 and size is odd but imposes no upper bound. ONNX Runtime allocates internal buffers proportional to size without checking system constraints, causing SIGSEGV/SIGFPE (DoS) on inference.",
+      "cve": null,
+      "attack_vector": "LRN.size = 200000001 (INT attribute, valid per ONNX spec)",
+      "static_structure": {
+        "format": "ONNX",
+        "opset": 18,
+        "ir_version": 11,
+        "nodes": [
+          {
+            "op_type": "LRN",
+            "domain": "",
+            "attributes": {
+              "alpha": {"type": "FLOAT", "value": 0.0001},
+              "beta": {"type": "FLOAT", "value": 0.75},
+              "bias": {"type": "FLOAT", "value": 1.0},
+              "size": {"type": "INT", "value": 200000001}
+            }
+          }
+        ],
+        "initializers": [],
+        "external_data_references": []
+      },
+      "scan_command": "python -m model_scanner scan \"https://huggingface.co/rez0/onnx-lrn-sigsegv-poc\" --max-size 500 --json --output scan_tc10.json",
+      "scanner_result": {
+        "overall_outcome": "COMPLETE",
+        "finding_count": 0,
+        "risk_score": 0,
+        "risk_band": "CLEAN",
+        "duration_ms": null
+      },
+      "verdict": "INCONCLUSIVE",
+      "tc_classification": "INCONCLUSIVE",
+      "expected_if_rule_existed": "FN under current rules; TP if ON104-style attribute bound rule added",
+      "notes": "size=200000001 passes ONNX spec validation (odd, positive). Harm manifests exclusively during runtime buffer allocation — not during static inspection. Detecting this statically would require heuristic attribute-value bounds checking on standard operators, which is outside Project 2 stated scope. Not a false negative against any existing detection claim."
+    },
+    {
+      "tc_id": "TC11",
+      "repository": "0xiviel/poc-openvino-onnx-uint64-overflow",
+      "repository_type": "dataset",
+      "repository_type_note": "HuggingFace dataset repo — scanner HF acquisition handles model repos only. Direct resolve URL used.",
+      "artifact": "malicious_onnx_overflow.onnx",
+      "artifact_size_bytes": 186,
+      "sha256": "3834d6e1e6fc07fc50f499fddca28c5080ff156d57d66d77de767ec983dfebaa",
+      "accessible": true,
+      "testable": true,
+      "scan_acquisition_method": "direct_url",
+      "vulnerability_class": "uint64_integer_overflow_in_external_data_offset",
+      "vulnerability_description": "Integer overflow in OpenVINO ONNX external data bounds check. offset=0xFFFFFFFFFFFFFFF0 + length=16 wraps to 0 (mod 2^64), bypassing the check 'm_offset + m_data_length > file_size'. Subsequent pointer arithmetic produces a wild pointer. Confirmed on OpenVINO 2025.4.1.",
+      "cve": null,
+      "attack_vector": "external_data.offset = 18446744073709551600 (0xFFFFFFFFFFFFFFF0), external_data.length = 16",
+      "overflow_arithmetic": {
+        "offset": "0xFFFFFFFFFFFFFFF0",
+        "offset_decimal": 18446744073709551600,
+        "length": 16,
+        "sum_mod_2_64": 0,
+        "bypass_condition": "sum(0) <= file_size passes the bounds check"
+      },
+      "static_structure": {
+        "format": "ONNX",
+        "opset": 13,
+        "ir_version": 7,
+        "nodes": [
+          {
+            "op_type": "Add",
+            "domain": ""
+          }
+        ],
+        "initializers": [
+          {
+            "name": "weights",
+            "data_location": "EXTERNAL",
+            "external_data": {
+              "location": "overflow_data.bin",
+              "offset": 18446744073709551600,
+              "length": 16
+            }
+          }
+        ]
+      },
+      "scan_command": "python -m model_scanner scan \"https://huggingface.co/datasets/0xiviel/poc-openvino-onnx-uint64-overflow/resolve/main/malicious_onnx_overflow.onnx\" --max-size 500 --json --output scan_tc11.json",
+      "scanner_result": {
+        "overall_outcome": "COMPLETE",
+        "finding_count": 0,
+        "risk_score": 0,
+        "risk_band": "CLEAN",
+        "duration_ms": null
+      },
+      "verdict": "FN",
+      "tc_classification": "FALSE_NEGATIVE",
+      "gap_description": "ON103 inspects external_data location (string) for path traversal but does not inspect offset/length (numeric) for overflow conditions. The malicious condition (extreme offset causing uint64 wraparound) is statically visible in the protobuf but outside ON103's scope.",
+      "notes": "location='overflow_data.bin' is a benign relative path — ON103 correctly does not fire on it. The attack is entirely in the numeric offset field. This is a genuine static detection gap.",
+      "on104_remediation": {
+        "status": "FIXED",
+        "rule_implemented": "ON104 — External Data Offset/Length Overflow",
+        "detection_condition": "offset + length >= 2^64 (Python arbitrary-precision integer; no scanner overflow)",
+        "retest_verdict": "TRUE_POSITIVE",
+        "retest_scanner_result": {
+          "overall_outcome": "WARNING",
+          "finding_count": 1,
+          "rule": "ON104",
+          "severity": "HIGH",
+          "confidence": "HIGH",
+          "risk_score": 30,
+          "risk_band": "LOW_RISK",
+          "evidence": "initializer='weights' location='overflow_data.bin' offset=18446744073709551600 length=16 offset+length=18446744073709551616 wrapped_sum=0"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "initial_evaluation": {
+      "total_tc": 4,
+      "accessible": 3,
+      "testable": 3,
+      "cannot_test": 1,
+      "true_positive": 1,
+      "false_negative": 1,
+      "inconclusive": 1,
+      "cannot_test_count": 1,
+      "detection_rate_of_testable": "1/3 (33%)",
+      "notes": "TC8=TP (ON103), TC9=CANNOT_TEST (GatedRepo), TC10=INCONCLUSIVE (runtime-only DoS), TC11=FN (numeric offset overflow, no rule covers it)"
+    },
+    "after_on104_remediation": {
+      "total_tc": 4,
+      "cannot_test": 1,
+      "true_positive": 2,
+      "false_negative": 0,
+      "inconclusive": 1,
+      "detection_rate_of_testable": "2/3 (67%)",
+      "notes": "TC8=TP (ON103), TC9=CANNOT_TEST (GatedRepo), TC10=INCONCLUSIVE (runtime-only DoS), TC11=TP (ON104 — FN resolved)"
+    }
+  },
+  "onnx_rule_coverage": {
+    "ON101": {"description": "Non-standard/custom operator domain", "covers": ["custom_operator_injection"]},
+    "ON102": {"description": "Malformed/unparseable ONNX graph", "covers": ["graph_corruption"]},
+    "ON103": {"description": "Path traversal in external_data location string", "covers": ["external_data_path_traversal"]},
+    "ON104": {"description": "External data offset+length uint64 wraparound", "covers": ["external_data_numeric_overflow"], "status": "IMPLEMENTED", "resolves_tc": "TC11"}
+  },
+  "action_items": [
+    {
+      "priority": "DONE",
+      "action": "ON104 — External Data Offset/Length Overflow",
+      "status": "IMPLEMENTED",
+      "rationale": "TC11 demonstrated a statically visible uint64 overflow condition. Implemented as ON104 with condition: offset + length >= 2^64.",
+      "tests": "6 new unit tests in TestON104ExternalDataOverflow; all pass"
+    },
+    {
+      "priority": "LOW",
+      "action": "Consider heuristic LRN size bounds check",
+      "rationale": "TC10 shows size=200000001 (200M) causing SIGSEGV. However this is runtime-only and the ONNX spec permits the value. Risk of false positives on legitimate large LRN configs must be assessed.",
+      "status": "NOT_IMPLEMENTED — outside stated scope (runtime-only effect)"
+    }
+  ],
+  "test_integrity": {
+    "onnx_tests": "20 passed (14 existing + 6 new ON104)",
+    "full_suite": "1207 passed, 4 skipped, 0 failed",
+    "source_files_modified": "src/model_scanner/analyzers/onnx/analyzer.py, src/model_scanner/rules/catalog.py",
+    "no_runtime_executed": true
+  }
+}

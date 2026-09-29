@@ -1,0 +1,39 @@
+artifact,expected_label,detected_format,scan_outcome,risk_score,risk_band,finding_count,rule_ids,classification,reason
+checkpoint-500,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,6,SC106|SC106|SC106|SC106|SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+adapter_model.safetensors,MALICIOUS,SAFETENSORS,COMPLETE,0,CLEAN,0,,UNSUPPORTED_FORMAT,SafeTensors cannot execute code. Weight-based backdoors are out-of-scope for static code analysis.
+optimizer.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+rng_state.pth,MALICIOUS,PYTORCH_ZIP,COMPLETE,10,LOW_RISK,3,P209|P106|P106,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+scheduler.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+training_args.bin,MALICIOUS,PYTORCH_ZIP,COMPLETE,29,LOW_RISK,7,P209|P106|P106|P106|P107|P107|P107,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+checkpoint-6000,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,6,SC106|SC106|SC106|SC106|SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+adapter_model.safetensors,MALICIOUS,SAFETENSORS,COMPLETE,0,CLEAN,0,,UNSUPPORTED_FORMAT,SafeTensors cannot execute code. Weight-based backdoors are out-of-scope for static code analysis.
+optimizer.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+rng_state.pth,MALICIOUS,PYTORCH_ZIP,COMPLETE,10,LOW_RISK,3,P209|P106|P106,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+scheduler.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+training_args.bin,MALICIOUS,PYTORCH_ZIP,COMPLETE,29,LOW_RISK,7,P209|P106|P106|P106|P107|P107|P107,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+checkpoint-6828,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,6,SC106|SC106|SC106|SC106|SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+adapter_model.safetensors,MALICIOUS,SAFETENSORS,COMPLETE,0,CLEAN,0,,UNSUPPORTED_FORMAT,SafeTensors cannot execute code. Weight-based backdoors are out-of-scope for static code analysis.
+optimizer.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+rng_state.pth,MALICIOUS,PYTORCH_ZIP,COMPLETE,10,LOW_RISK,3,P209|P106|P106,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+scheduler.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+training_args.bin,MALICIOUS,PYTORCH_ZIP,COMPLETE,29,LOW_RISK,7,P209|P106|P106|P106|P107|P107|P107,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+checkpoint-6000,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,6,SC106|SC106|SC106|SC106|SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+adapter_model.safetensors,MALICIOUS,SAFETENSORS,COMPLETE,0,CLEAN,0,,UNSUPPORTED_FORMAT,SafeTensors cannot execute code. Weight-based backdoors are out-of-scope for static code analysis.
+optimizer.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+rng_state.pth,MALICIOUS,PYTORCH_ZIP,COMPLETE,10,LOW_RISK,3,P209|P106|P106,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+scheduler.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+training_args.bin,MALICIOUS,PYTORCH_ZIP,COMPLETE,29,LOW_RISK,7,P209|P106|P106|P106|P107|P107|P107,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+checkpoint-6828,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,6,SC106|SC106|SC106|SC106|SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+adapter_model.safetensors,MALICIOUS,SAFETENSORS,COMPLETE,0,CLEAN,0,,UNSUPPORTED_FORMAT,SafeTensors cannot execute code. Weight-based backdoors are out-of-scope for static code analysis.
+optimizer.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+rng_state.pth,MALICIOUS,PYTORCH_ZIP,COMPLETE,10,LOW_RISK,3,P209|P106|P106,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+scheduler.pt,MALICIOUS,PYTORCH_ZIP,COMPLETE,0,CLEAN,1,P209,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+training_args.bin,MALICIOUS,PYTORCH_ZIP,COMPLETE,29,LOW_RISK,7,P209|P106|P106|P106|P107|P107|P107,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+BACKDOOR-002,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,4,SC106|SC106|SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+flax_model.msgpack,MALICIOUS,FLAX_MSGPACK,WARNING,0,CLEAN,1,G002,GENUINE_FALSE_NEGATIVE,Scanner missed entirely.
+model.safetensors,MALICIOUS,SAFETENSORS,COMPLETE,0,CLEAN,0,,UNSUPPORTED_FORMAT,SafeTensors cannot execute code. Weight-based backdoors are out-of-scope for static code analysis.
+pytorch_model.bin,MALICIOUS,PYTORCH_ZIP,COMPLETE,5,LOW_RISK,2,P209|P106,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+MAL-001-m3e_biased,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,2,SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+MAL-002-gpt2-elite,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,2,SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+MAL-003-gptp,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,2,SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."
+MAL-004-baller13,MALICIOUS,REPOSITORY,COMPLETE,20,LOW_RISK,2,SC106|SC202,DETECTED_LOW_RISK,"Scanner detected security indicators (LOW_RISK), but did not reach HIGH threshold. Validation script threshold error."

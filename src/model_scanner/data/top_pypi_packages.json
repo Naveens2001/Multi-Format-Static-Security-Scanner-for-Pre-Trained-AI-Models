@@ -1,0 +1,12 @@
+["numpy", "pandas", "torch", "tensorflow", "scikit-learn", "scipy", "matplotlib",
+ "requests", "pillow", "setuptools", "pip", "wheel", "six", "certifi", "charset-normalizer",
+ "urllib3", "idna", "packaging", "tqdm", "pyyaml", "pyarrow", "fsspec", "huggingface-hub",
+ "transformers", "tokenizers", "safetensors", "accelerate", "datasets", "evaluate",
+ "diffusers", "xgboost", "lightgbm", "catboost", "joblib", "click", "rich", "typer",
+ "pydantic", "fastapi", "uvicorn", "aiohttp", "httpx", "boto3", "google-cloud-storage",
+ "azure-storage-blob", "opencv-python", "Pillow", "imageio", "torchvision", "timm",
+ "einops", "hydra-core", "omegaconf", "optuna", "mlflow", "wandb", "tensorboard",
+ "onnx", "onnxruntime", "triton", "bitsandbytes", "peft", "trl", "langchain",
+ "openai", "anthropic", "cohere", "tiktoken", "sentencepiece", "protobuf",
+ "grpcio", "h5py", "zarr", "netcdf4", "pyarrow", "polars", "dask", "numba",
+ "sympy", "networkx", "statsmodels", "seaborn", "plotly", "bokeh", "altair"]

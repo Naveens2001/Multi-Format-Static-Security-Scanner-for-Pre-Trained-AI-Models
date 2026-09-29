@@ -1,0 +1,323 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Deterministic synthetic model security evaluation corpus",
+  "total_samples": 27,
+  "samples": [
+    {
+      "case_id": "CLEAN-PKL-001",
+      "filename": "clean_pickle.pkl",
+      "format": "RAW_PICKLE",
+      "category": "clean",
+      "expected_classification": "BENIGN",
+      "expected_outcome": "COMPLETE",
+      "expected_rules": [],
+      "description": "Standard benign Pickle empty dict payload (PROTO 2)."
+    },
+    {
+      "case_id": "CLEAN-PT-001",
+      "filename": "clean_pytorch_zip.pt",
+      "format": "PYTORCH_ZIP",
+      "category": "clean",
+      "expected_classification": "BENIGN",
+      "expected_outcome": "COMPLETE",
+      "expected_rules": [
+        "P209"
+      ],
+      "description": "Benign modern PyTorch ZIP archive with torch tensor rebuild."
+    },
+    {
+      "case_id": "CLEAN-ST-001",
+      "filename": "clean_safetensors.safetensors",
+      "format": "SAFETENSORS",
+      "category": "clean",
+      "expected_classification": "BENIGN",
+      "expected_outcome": "COMPLETE",
+      "expected_rules": [],
+      "description": "Standard benign SafeTensors model with valid tensor data."
+    },
+    {
+      "case_id": "CLEAN-GU-001",
+      "filename": "clean_gguf.gguf",
+      "format": "GGUF",
+      "category": "clean",
+      "expected_classification": "BENIGN",
+      "expected_outcome": "COMPLETE",
+      "expected_rules": [],
+      "description": "Standard benign GGUF v3 model file with valid metadata."
+    },
+    {
+      "case_id": "MAL-PKL-P101-001",
+      "filename": "malicious_pickle_p101_system.pkl",
+      "format": "RAW_PICKLE",
+      "category": "code_execution",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "P101"
+      ],
+      "description": "Pickle payload importing os.system for arbitrary command execution."
+    },
+    {
+      "case_id": "MAL-PKL-P101-002",
+      "filename": "malicious_pickle_p101_subprocess.pkl",
+      "format": "RAW_PICKLE",
+      "category": "code_execution",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "P101"
+      ],
+      "description": "Pickle payload importing subprocess.Popen."
+    },
+    {
+      "case_id": "MAL-PKL-P106-001",
+      "filename": "malicious_pickle_p106_eval.pkl",
+      "format": "RAW_PICKLE",
+      "category": "code_execution",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "P106"
+      ],
+      "description": "Pickle payload invoking builtins.eval for dynamic code execution."
+    },
+    {
+      "case_id": "MAL-PT-P101-001",
+      "filename": "malicious_pytorch_zip_p101.pt",
+      "format": "PYTORCH_ZIP",
+      "category": "code_execution",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "P101",
+        "P209"
+      ],
+      "description": "PyTorch ZIP container embedding malicious os.system Pickle stream."
+    },
+    {
+      "case_id": "MAL-ST-ST105-001",
+      "filename": "malicious_safetensors_st105_eval.safetensors",
+      "format": "SAFETENSORS",
+      "category": "metadata_injection",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "ST105"
+      ],
+      "description": "SafeTensors header containing code injection payload in __metadata__."
+    },
+    {
+      "case_id": "MAL-ST-ST102-001",
+      "filename": "malicious_safetensors_st102_traversal.safetensors",
+      "format": "SAFETENSORS",
+      "category": "metadata_injection",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "ST102"
+      ],
+      "description": "SafeTensors header containing path traversal pattern in __metadata__."
+    },
+    {
+      "case_id": "MAL-ST-ST104-001",
+      "filename": "malicious_safetensors_st104_secret.safetensors",
+      "format": "SAFETENSORS",
+      "category": "credential_leak",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "ST104"
+      ],
+      "description": "SafeTensors header containing exposed API key in __metadata__."
+    },
+    {
+      "case_id": "MAL-GU-GU101-001",
+      "filename": "malicious_gguf_gu101_injection.gguf",
+      "format": "GGUF",
+      "category": "metadata_injection",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "GU101"
+      ],
+      "description": "GGUF metadata field containing executable Python injection payload."
+    },
+    {
+      "case_id": "MAL-GU-GU102-001",
+      "filename": "malicious_gguf_gu102_traversal.gguf",
+      "format": "GGUF",
+      "category": "metadata_injection",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "GU102"
+      ],
+      "description": "GGUF metadata field containing directory traversal sequence."
+    },
+    {
+      "case_id": "MAL-GU-GU103-001",
+      "filename": "malicious_gguf_gu103_credential.gguf",
+      "format": "GGUF",
+      "category": "credential_leak",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "GU103"
+      ],
+      "description": "GGUF metadata containing hardcoded Hugging Face access token."
+    },
+    {
+      "case_id": "MAL-SPOOF-G001-001",
+      "filename": "malicious_spoofed_safetensors_g001.safetensors",
+      "format": "RAW_PICKLE",
+      "category": "format_spoofing",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "G001",
+        "P101"
+      ],
+      "description": "File with .safetensors extension disguising malicious Pickle payload."
+    },
+    {
+      "case_id": "ANO-PKL-P206-001",
+      "filename": "anomaly_pickle_p206_concat.pkl",
+      "format": "RAW_PICKLE",
+      "category": "structural_anomaly",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "P206"
+      ],
+      "description": "Multiple concatenated Pickle streams delimited by STOP opcodes."
+    },
+    {
+      "case_id": "ANO-PKL-P207-001",
+      "filename": "anomaly_pickle_p207_trailing.pkl",
+      "format": "RAW_PICKLE",
+      "category": "structural_anomaly",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "P207"
+      ],
+      "description": "Pickle stream with trailing unparsed payload data."
+    },
+    {
+      "case_id": "ANO-ST-ST206-001",
+      "filename": "anomaly_safetensors_st206_outofbounds.safetensors",
+      "format": "SAFETENSORS",
+      "category": "structural_anomaly",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "ST206"
+      ],
+      "description": "SafeTensors with tensor offsets extending beyond physical file bounds."
+    },
+    {
+      "case_id": "ANO-ST-ST207-001",
+      "filename": "anomaly_safetensors_st207_overlap.safetensors",
+      "format": "SAFETENSORS",
+      "category": "structural_anomaly",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "ST207"
+      ],
+      "description": "SafeTensors with overlapping data offset regions."
+    },
+    {
+      "case_id": "ANO-GU-GU209-001",
+      "filename": "anomaly_gguf_gu209_outofbounds.gguf",
+      "format": "GGUF",
+      "category": "structural_anomaly",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "GU209"
+      ],
+      "description": "GGUF model with tensor offset exceeding total file boundary."
+    },
+    {
+      "case_id": "ANO-GU-GU210-001",
+      "filename": "anomaly_gguf_gu210_overlap.gguf",
+      "format": "GGUF",
+      "category": "structural_anomaly",
+      "expected_classification": "MALICIOUS",
+      "expected_outcome": "WARNING",
+      "expected_rules": [
+        "GU210"
+      ],
+      "description": "GGUF model with overlapping tensor memory ranges."
+    },
+    {
+      "case_id": "UNSUP-PT-LEGACY-001",
+      "filename": "unsupported_legacy_pytorch.bin",
+      "format": "UNSUPPORTED",
+      "category": "unsupported",
+      "expected_classification": "UNSUPPORTED",
+      "expected_outcome": "UNSUPPORTED",
+      "expected_rules": [],
+      "description": "Legacy non-ZIP PyTorch serialization checkpoint."
+    },
+    {
+      "case_id": "UNSUP-UNKNOWN-001",
+      "filename": "unsupported_unknown_format.xyz",
+      "format": "UNSUPPORTED",
+      "category": "unsupported",
+      "expected_classification": "UNSUPPORTED",
+      "expected_outcome": "UNSUPPORTED",
+      "expected_rules": [],
+      "description": "Unrecognized arbitrary binary/text file format."
+    },
+    {
+      "case_id": "MALF-PKL-P201-001",
+      "filename": "malformed_pickle_p201_truncated.pkl",
+      "format": "RAW_PICKLE",
+      "category": "malformed",
+      "expected_classification": "ERROR",
+      "expected_outcome": "ERROR",
+      "expected_rules": [
+        "P201"
+      ],
+      "description": "Truncated Pickle stream missing terminating STOP opcode."
+    },
+    {
+      "case_id": "MALF-PT-ZIP-001",
+      "filename": "malformed_pytorch_corrupted_zip.pt",
+      "format": "PYTORCH_ZIP",
+      "category": "malformed",
+      "expected_classification": "ERROR",
+      "expected_outcome": "ERROR",
+      "expected_rules": [
+        "P201"
+      ],
+      "description": "Corrupted PyTorch ZIP container failing ZIP structure validation."
+    },
+    {
+      "case_id": "MALF-ST-ST209-001",
+      "filename": "malformed_safetensors_st209_truncated.safetensors",
+      "format": "SAFETENSORS",
+      "category": "malformed",
+      "expected_classification": "ERROR",
+      "expected_outcome": "ERROR",
+      "expected_rules": [
+        "ST209"
+      ],
+      "description": "Truncated SafeTensors file smaller than 8-byte length prefix."
+    },
+    {
+      "case_id": "MALF-GU-GU202-001",
+      "filename": "malformed_gguf_gu202_corrupted.gguf",
+      "format": "GGUF",
+      "category": "malformed",
+      "expected_classification": "ERROR",
+      "expected_outcome": "ERROR",
+      "expected_rules": [
+        "GU202"
+      ],
+      "description": "GGUF file with corrupted header and invalid version."
+    }
+  ]
+}

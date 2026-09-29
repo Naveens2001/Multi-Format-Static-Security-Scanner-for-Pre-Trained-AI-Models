@@ -1,0 +1,54 @@
+# .gitignore for static_security_scanner
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# pytest / coverage
+.pytest_cache/
+.pytest_tmp/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# mypy
+.mypy_cache/
+
+# ruff
+.ruff_cache/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary fixture staging
+*.tmp_artifact
+
+# Distribution
+*.whl
+*.tar.gz
+
+# Coverage reports generated at runtime
+coverage.json
+
+# Benchmark run artefacts (generated, not committed)
+benchmarks/results.json

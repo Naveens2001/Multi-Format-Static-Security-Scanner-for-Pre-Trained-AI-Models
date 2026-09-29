@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>AI Model Security Scanner — Static Security Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </span>
+      <span class="brand-copy">
+        <span class="brand-name">AI Model Security Scanner</span>
+        <span class="brand-tag">Static security assessment for AI model artifacts</span>
+      </span>
+    </a>
+
+    <div class="topbar-actions">
+      <button id="btn-open-rules" class="btn btn-ghost" type="button">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Rule catalog
+        <span class="pill" id="rule-count-chip">—</span>
+      </button>
+      <button id="btn-theme" class="btn btn-icon" type="button" aria-label="Toggle colour theme" title="Toggle colour theme">
+        <svg class="ico ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg>
+        <svg class="ico ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="shell">
+
+  <!-- ============ SCAN INPUT ============ -->
+  <section class="hero">
+    <h1 class="hero-title">Scan a model before you load it</h1>
+    <p class="hero-sub">Pickle opcodes are disassembled symbolically. Weights are never read, nothing is deserialized, no model code is executed.</p>
+  </section>
+
+  <section class="card card-input" id="input-card">
+    <div class="seg" role="tablist" aria-label="Scan source">
+      <button class="seg-btn is-active" data-tab="upload" role="tab" aria-selected="true" aria-controls="tab-upload" id="segbtn-upload" type="button">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 9 5-5 5 5"/><path d="M12 4v12"/></svg>
+        Local file
+      </button>
+      <button class="seg-btn" data-tab="hf" role="tab" aria-selected="false" aria-controls="tab-hf" id="segbtn-hf" type="button">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Hugging Face
+      </button>
+      <span class="seg-thumb" aria-hidden="true"></span>
+    </div>
+
+    <div class="pane is-active" id="tab-upload" role="tabpanel" aria-labelledby="segbtn-upload">
+      <div class="alert alert-warn is-hidden" id="upload-error" role="alert"></div>
+
+      <label class="dropzone" id="dropzone" for="file-input">
+        <input type="file" id="file-input" class="sr-only"
+               accept=".safetensors,.pt,.pth,.bin,.gguf,.ggml,.pkl,.pickle,.ckpt">
+        <span class="dz-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 9 5-5 5 5"/><path d="M12 4v12"/></svg>
+        </span>
+        <span class="dz-title">Drop a model file here <span class="dz-or">or</span> <span class="dz-link">browse</span></span>
+        <span class="dz-formats">
+          <span class="chip">SafeTensors</span>
+          <span class="chip">PyTorch ZIP</span>
+          <span class="chip">Pickle</span>
+          <span class="chip">GGUF</span>
+          <span class="chip">GGML</span>
+        </span>
+      </label>
+
+      <div class="orsplit">
+        <span>or</span>
+      </div>
+
+      <button type="button" class="folderpick" id="folder-btn">
+        <span class="folderpick-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2z"/></svg>
+        </span>
+        <span class="folderpick-copy">
+          <strong>Scan a whole model folder</strong>
+          <small>Analyses config.json, bundled Python, requirements and shard integrity — supply-chain rules a single file can't reach.</small>
+        </span>
+        <span class="folderpick-cta" aria-hidden="true">Choose folder</span>
+      </button>
+      <input type="file" id="folder-input" class="sr-only" webkitdirectory directory multiple>
+
+      <div class="filecard is-hidden" id="file-card">
+        <span class="filecard-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        </span>
+        <span class="filecard-meta">
+          <strong id="file-name">—</strong>
+          <small id="file-size">—</small>
+        </span>
+        <button type="button" class="btn btn-icon btn-quiet" id="file-clear" aria-label="Remove selected file" title="Remove selected file">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="pane" id="tab-hf" role="tabpanel" aria-labelledby="segbtn-hf" hidden>
+      <div class="alert alert-warn is-hidden" id="hf-error" role="alert"></div>
+      <div class="field">
+        <label class="field-label" for="hf-url-input">Repository or direct file URL</label>
+        <div class="field-wrap">
+          <span class="field-prefix" aria-hidden="true">
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+          </span>
+          <input type="url" id="hf-url-input" class="input" spellcheck="false" autocomplete="off"
+                 placeholder="https://huggingface.co/org/model-name">
+        </div>
+        <small class="field-hint">Model repositories and direct file URLs only. Dataset repositories are not supported.</small>
+      </div>
+      <div class="examples">
+        <span class="examples-label">Try</span>
+        <button type="button" class="example" data-url="https://huggingface.co/prajjwal1/bert-tiny">prajjwal1/bert-tiny</button>
+        <button type="button" class="example" data-url="https://huggingface.co/gpt2">gpt2</button>
+      </div>
+    </div>
+
+    <div class="runbar">
+      <label class="switch" for="strict-mode-chk">
+        <input type="checkbox" id="strict-mode-chk">
+        <span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>
+        <span class="switch-copy">
+          <strong>Strict mode</strong>
+          <small>Escalates dynamic pickle opcode warnings to HIGH</small>
+        </span>
+      </label>
+      <button id="start-scan-btn" class="btn btn-primary btn-lg" type="button">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        Start scan
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ PROGRESS ============ -->
+  <section class="card card-status is-hidden" id="status-card" aria-live="polite">
+    <div class="status-top">
+      <span class="status-orb" id="status-orb" aria-hidden="true"><span></span></span>
+      <div class="status-copy">
+        <h2 id="status-title">Scan queued</h2>
+        <p id="status-message">Waiting for a scanner worker…</p>
+        <p class="status-tech is-hidden" id="status-tech"></p>
+      </div>
+      <span class="badge badge-queued" id="status-badge">QUEUED</span>
+    </div>
+    <ol class="steps" id="steps">
+      <li class="step" data-step="QUEUED"><span class="step-dot"></span>Queued</li>
+      <li class="step" data-step="ACQUIRING"><span class="step-dot"></span>Acquiring</li>
+      <li class="step" data-step="SCANNING"><span class="step-dot"></span>Analysing</li>
+      <li class="step" data-step="COMPLETED"><span class="step-dot"></span>Report</li>
+    </ol>
+    <div class="status-actions">
+      <button type="button" class="btn btn-danger btn-sm is-hidden" id="btn-cancel-scan">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Cancel scan
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm is-hidden" id="btn-retry">Try again</button>
+    </div>
+
+  </section>
+
+    <!-- shown when the server refuses new work because the queue is full -->
+    <div class="recovery is-hidden" id="queue-recovery">
+      <div class="recovery-head">
+        <span class="recovery-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <div>
+          <strong>The scan queue is full</strong>
+          <p id="queue-recovery-detail">Waiting scans are holding every slot.</p>
+        </div>
+      </div>
+      <div class="recovery-actions">
+        <button type="button" class="btn btn-primary btn-sm" id="btn-cancel-all">Cancel all waiting scans</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-refresh-capacity">Check again</button>
+      </div>
+    </div>
+
+  <!-- ============ RESULTS ============ -->
+  <section class="results is-hidden" id="results-card">
+
+    <div class="verdict" id="verdict-banner">
+      <div class="verdict-glow" aria-hidden="true"></div>
+      <div class="verdict-body">
+        <span class="verdict-eyebrow">Overall verdict</span>
+        <div class="verdict-headline">
+          <span class="verdict-icon" id="verdict-icon" aria-hidden="true"></span>
+          <span class="verdict-word" id="verdict-text">PASS</span>
+        </div>
+        <p class="verdict-desc" id="verdict-desc">No security findings detected.</p>
+      </div>
+      <div class="verdict-score">
+        <div class="gauge" id="gauge" style="--pct:0">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="gauge-bg" cx="60" cy="60" r="52"/>
+            <circle class="gauge-fg" cx="60" cy="60" r="52"/>
+          </svg>
+          <div class="gauge-mid">
+            <span class="gauge-num" id="res-score">0</span>
+            <span class="gauge-den">/ 100</span>
+          </div>
+        </div>
+        <span class="gauge-label">Risk score</span>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><span class="kpi-k">Risk band</span><span class="kpi-v" id="res-band">—</span></div>
+      <div class="kpi"><span class="kpi-k">Scan outcome</span><span class="kpi-v" id="res-outcome">—</span></div>
+      <div class="kpi"><span class="kpi-k">Artifacts</span><span class="kpi-v" id="res-artifact-count">—</span></div>
+      <div class="kpi"><span class="kpi-k">Exit code</span><span class="kpi-v" id="res-exit-code">—</span></div>
+      <div class="kpi"><span class="kpi-k">Duration</span><span class="kpi-v" id="res-duration">—</span></div>
+    </div>
+
+    <div class="actionbar">
+      <button id="btn-new-scan" class="btn btn-ghost" type="button">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        New scan
+      </button>
+      <div class="actionbar-right">
+        <button id="btn-download-json" class="btn btn-ghost" type="button">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+          JSON report
+        </button>
+        <button id="btn-download-html" class="btn btn-ghost" type="button">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          HTML report
+        </button>
+      </div>
+    </div>
+
+    <!-- severity posture -->
+    <div class="card">
+      <div class="card-head">
+        <h2 class="card-title">Security posture</h2>
+        <span class="card-sub" id="posture-scope">Across all artifacts</span>
+      </div>
+      <div class="posture" id="posture"></div>
+    </div>
+
+    <!-- artifact picker (multi-artifact repos) -->
+    <div class="card is-hidden" id="artifact-picker-card">
+      <div class="card-head">
+        <h2 class="card-title">Artifacts</h2>
+        <span class="card-sub" id="artifact-picker-sub"></span>
+      </div>
+      <div class="artifact-list" id="artifact-list" role="tablist" aria-label="Scanned artifacts"></div>
+    </div>
+
+    <!-- selected artifact detail -->
+    <div class="card">
+      <div class="card-head">
+        <h2 class="card-title">Artifact detail</h2>
+      </div>
+      <div class="ident" id="ident"></div>
+      <div class="diagnostics" id="diagnostics"></div>
+    </div>
+
+    <!-- findings -->
+    <div class="card">
+      <div class="card-head card-head-stack">
+        <div>
+          <h2 class="card-title">Findings <span class="count" id="findings-total-count">0</span></h2>
+          <span class="card-sub" id="findings-scope"></span>
+        </div>
+        <div class="findings-tools">
+          <div class="field-wrap field-wrap-sm">
+            <span class="field-prefix" aria-hidden="true">
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            </span>
+            <input type="search" id="findings-search" class="input input-sm" placeholder="Filter findings…" autocomplete="off">
+          </div>
+          <div class="sevfilter" id="findings-sevfilter" role="group" aria-label="Filter by severity"></div>
+        </div>
+      </div>
+      <div class="findings" id="findings-list"></div>
+      <div class="empty is-hidden" id="findings-empty"></div>
+    </div>
+
+    <!-- correlation -->
+    <div class="card is-hidden" id="correlation-section">
+      <div class="card-head">
+        <h2 class="card-title">Correlation analysis</h2>
+        <span class="card-sub">Findings sharing evidence patterns — compound or coordinated risk.</span>
+      </div>
+      <div class="corr" id="correlation-list"></div>
+    </div>
+
+    <!-- methodology -->
+    <div class="card">
+      <div class="card-head"><h2 class="card-title">Methodology &amp; coverage</h2></div>
+      <div class="method">
+        <div class="method-col">
+          <h3><span class="method-tick" aria-hidden="true">✓</span> What was analysed</h3>
+          <ul>
+            <li>Pickle opcode streams, disassembled symbolically — never executed or deserialized</li>
+            <li>PyTorch ZIP archives inspected as containers; <code>archive/data.pkl</code> analysed as pickle</li>
+            <li>SafeTensors headers and metadata key–value pairs</li>
+            <li>GGUF metadata sections, key–value pairs and offset tables</li>
+            <li>Cross-format structural anomalies — magic-byte and extension conflicts</li>
+          </ul>
+        </div>
+        <div class="method-col">
+          <h3><span class="method-tick method-tick-muted" aria-hidden="true">!</span> Scope &amp; limitations</h3>
+          <ul>
+            <li>Detection is pattern-based and static — there is no behavioural analysis</li>
+            <li>Model weights and tensor data are never loaded into memory</li>
+            <li>Zero runtime dependencies — pure Python standard library engine</li>
+            <li>Legacy non-ZIP PyTorch checkpoints are reported UNSUPPORTED, not analysed</li>
+            <li>Dataset repositories are out of scope — model files only</li>
+          </ul>
+        </div>
+      </div>
+      <p class="disclaimer">
+        <strong>Static analysis disclaimer.</strong> Evidence represents security-relevant structures observed during static inspection. It does not constitute proof of successful exploitation, and a clean result is not a guarantee of safety.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>AI Model Security Scanner</span><span class="dot">·</span>
+  <span>Static analysis only</span><span class="dot">·</span>
+  <span>Zero dynamic code execution</span><span class="dot">·</span>
+  <span>Standard library engine</span>
+</footer>
+
+<!-- ============ RULE CATALOG MODAL ============ -->
+<div class="modal is-hidden" id="rules-modal" role="dialog" aria-modal="true" aria-labelledby="rules-modal-title">
+  <div class="modal-scrim" data-close-modal></div>
+  <div class="modal-panel">
+    <header class="modal-head">
+      <div>
+        <h2 id="rules-modal-title">Rule catalog</h2>
+        <p class="modal-sub"><span id="rules-shown">0</span> of <span id="rules-total">0</span> rules shown</p>
+      </div>
+      <button id="btn-close-rules" class="btn btn-icon btn-quiet" type="button" aria-label="Close rule catalog">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </header>
+    <div class="modal-tools">
+      <div class="field-wrap field-wrap-sm">
+        <span class="field-prefix" aria-hidden="true">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </span>
+        <input type="search" id="rules-search-input" class="input input-sm" placeholder="Search rule ID, name, category or format…" autocomplete="off">
+      </div>
+      <div class="sevfilter" id="rules-sevfilter" role="group" aria-label="Filter rules by severity"></div>
+    </div>
+    <div class="modal-body">
+      <div class="rules" id="rules-list"></div>
+      <div class="empty is-hidden" id="rules-empty">No rules match the current filter.</div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

